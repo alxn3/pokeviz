@@ -1,1 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
+
+:root {
+  --base-hue: 257;
+  --accent-hue: mod(var(--base-hue) + 180, 360);
+
+  --base-l-50: 96%;
+  --base-l-100: 94.44%;
+  --base-l-200: 89.76%;
+  --base-l-300: 81.96%;
+  --base-l-400: 71.04%;
+  --base-l-500: 57%;
+  --base-l-600: 42.96%;
+  --base-l-700: 32.04%;
+  --base-l-800: 24.24%;
+  --base-l-900: 19.56%;
+  --base-l-950: 18%;
+
+  --base-c-0: 0.0141;
+  --base-c-1: 0.015;
+  --base-c-2: 0.0175;
+  --base-c-3: 0.0215;
+  --base-c-4: 0.0265;
+  --base-c-5: 0.032;
+
+  --ad-l-50: 86%;
+  --ad-l-100: 79.2%;
+  --ad-l-200: 72.4%;
+  --ad-l-300: 65.6%;
+  --ad-l-400: 58.8%;
+  --ad-l-500: 52%;
+  --ad-l-600: 45.2%;
+  --ad-l-700: 38.4%;
+  --ad-l-800: 31.6%;
+  --ad-l-900: 24.8%;
+  --ad-l-950: 18%;
+
+  --ad-c-50: 0.113;
+  --ad-c-100: 0.1458;
+  --ad-c-200: 0.1712;
+  --ad-c-300: 0.1879;
+  --ad-c-400: 0.1948;
+  --ad-c-500: 0.1917;
+  --ad-c-600: 0.1787;
+  --ad-c-700: 0.1565;
+  --ad-c-800: 0.1263;
+  --ad-c-900: 0.0899;
+  --ad-c-950: 0.0493;
+}
+
+:root[class~='dark'] {
+  --base-hue: 209;
+  --accent-hue: mod((var(--base-hue) + 180), 360);
+
+  --base-l-50: 12%;
+  --base-l-100: 13.56%;
+  --base-l-200: 18.24%;
+  --base-l-300: 26.04%;
+  --base-l-400: 36.96%;
+  --base-l-500: 51%;
+  --base-l-600: 65.04%;
+  --base-l-700: 75.96%;
+  --base-l-800: 83.76%;
+  --base-l-900: 88.44%;
+  --base-l-950: 90%;
+
+  --ad-l-50: 91%;
+  --ad-l-100: 84.2%;
+  --ad-l-200: 77.4%;
+  --ad-l-300: 70.6%;
+  --ad-l-400: 63.8%;
+  --ad-l-500: 57%;
+  --ad-l-600: 50.2%;
+  --ad-l-700: 43.4%;
+  --ad-l-800: 36.6%;
+  --ad-l-900: 29.8%;
+  --ad-l-950: 23%;
+}
+
+@theme {
+  /* tailwind override */
+  --font-sans: 'Work Sans';
+
+  /* custom fonts */
+  --font-display: 'Raleway';
+  --font-body: 'Work Sans';
+  --font-pixel: 'pixelify sans';
+
+  --color-background: var(--color-base-100);
+  --color-text: var(--color-base-950);
+
+  --color-base-50: oklch(var(--base-l-50) var(--base-c-0) var(--base-hue));
+  --color-base-100: oklch(var(--base-l-100) var(--base-c-1) var(--base-hue));
+  --color-base-200: oklch(var(--base-l-200) var(--base-c-2) var(--base-hue));
+  --color-base-300: oklch(var(--base-l-300) var(--base-c-3) var(--base-hue));
+  --color-base-400: oklch(var(--base-l-400) var(--base-c-4) var(--base-hue));
+  --color-base-500: oklch(var(--base-l-500) var(--base-c-5) var(--base-hue));
+  --color-base-600: oklch(var(--base-l-600) var(--base-c-4) var(--base-hue));
+  --color-base-700: oklch(var(--base-l-700) var(--base-c-3) var(--base-hue));
+  --color-base-800: oklch(var(--base-l-800) var(--base-c-2) var(--base-hue));
+  --color-base-900: oklch(var(--base-l-900) var(--base-c-1) var(--base-hue));
+  --color-base-950: oklch(var(--base-l-950) var(--base-c-0) var(--base-hue));
+
+  --color-accent-50: oklch(var(--ad-l-50) var(--ad-c-50) var(--accent-hue));
+  --color-accent-100: oklch(var(--ad-l-100) var(--ad-c-100) var(--accent-hue));
+  --color-accent-200: oklch(var(--ad-l-200) var(--ad-c-200) var(--accent-hue));
+  --color-accent-300: oklch(var(--ad-l-300) var(--ad-c-300) var(--accent-hue));
+  --color-accent-400: oklch(var(--ad-l-400) var(--ad-c-400) var(--accent-hue));
+  --color-accent-500: oklch(var(--ad-l-500) var(--ad-c-500) var(--accent-hue));
+  --color-accent-600: oklch(var(--ad-l-600) var(--ad-c-600) var(--accent-hue));
+  --color-accent-700: oklch(var(--ad-l-700) var(--ad-c-700) var(--accent-hue));
+  --color-accent-800: oklch(var(--ad-l-800) var(--ad-c-800) var(--accent-hue));
+  --color-accent-900: oklch(var(--ad-l-900) var(--ad-c-900) var(--accent-hue));
+  --color-accent-950: oklch(var(--ad-l-950) var(--ad-c-950) var(--accent-hue));
+}
+
+html {
+  height: 100%;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+body {
+  min-height: 100%;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+  }
+}

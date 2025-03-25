@@ -3,6 +3,7 @@
   "specifiers": {
     "npm:@eslint/compat@^1.2.5": "1.2.7_eslint@9.23.0",
     "npm:@eslint/js@^9.18.0": "9.23.0",
+    "npm:@lucide/svelte@0.483": "0.483.0_svelte@5.25.2__acorn@8.14.1",
     "npm:@sveltejs/adapter-auto@4": "4.0.0_@sveltejs+kit@2.20.2__@sveltejs+vite-plugin-svelte@5.0.3___svelte@5.25.2____acorn@8.14.1___vite@6.2.2____lightningcss@1.29.2__svelte@5.25.2___acorn@8.14.1__vite@6.2.2___lightningcss@1.29.2_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.25.2___acorn@8.14.1__vite@6.2.2___lightningcss@1.29.2_svelte@5.25.2__acorn@8.14.1_vite@6.2.2__lightningcss@1.29.2",
     "npm:@sveltejs/kit@^2.16.0": "2.20.2_@sveltejs+vite-plugin-svelte@5.0.3__svelte@5.25.2___acorn@8.14.1__vite@6.2.2___lightningcss@1.29.2_svelte@5.25.2__acorn@8.14.1_vite@6.2.2__lightningcss@1.29.2",
     "npm:@sveltejs/vite-plugin-svelte@5": "5.0.3_svelte@5.25.2__acorn@8.14.1_vite@6.2.2__lightningcss@1.29.2",
@@ -267,6 +268,12 @@
       "dependencies": [
         "@jridgewell/resolve-uri",
         "@jridgewell/sourcemap-codec"
+      ]
+    },
+    "@lucide/svelte@0.483.0_svelte@5.25.2__acorn@8.14.1": {
+      "integrity": "sha512-b3SbhMIgVJAj/rPa3go6uplTzaFkJzz91TSPO8I8gc2evtHOA2OgSmPYz0S+yEKFIWqLUZ4gika19ljV+tnmyQ==",
+      "dependencies": [
+        "svelte"
       ]
     },
     "@nodelib/fs.scandir@2.1.5": {
@@ -2016,6 +2023,7 @@
       "dependencies": [
         "npm:@eslint/compat@^1.2.5",
         "npm:@eslint/js@^9.18.0",
+        "npm:@lucide/svelte@0.483",
         "npm:@sveltejs/adapter-auto@4",
         "npm:@sveltejs/kit@^2.16.0",
         "npm:@sveltejs/vite-plugin-svelte@5",
