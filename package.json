@@ -16,7 +16,8 @@
     "test": "npm run test:unit -- --run"
   },
   "dependencies": {
-    "@lucide/svelte": "^0.483.0"
+    "@lucide/svelte": "^0.483.0",
+    "pokeapi-js-wrapper": "^1.2.8"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.5",
