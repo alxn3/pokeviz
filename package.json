@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@lucide/svelte": "^0.483.0",
+    "d3": "^7.9.0",
     "pokeapi-js-wrapper": "^1.2.8"
   },
   "devDependencies": {
