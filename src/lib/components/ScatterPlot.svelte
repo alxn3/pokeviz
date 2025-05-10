@@ -1,4 +1,7 @@
-<!-- Reference Code from https://plotly.com/javascript/3d-scatter-plots/ -->
+<!-- Reference Code from 
+  https://plotly.com/javascript/3d-scatter-plots/
+  https://d3-graph-gallery.com/graph/scatter_basic.html 
+-->
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
