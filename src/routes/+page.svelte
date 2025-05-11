@@ -1,10 +1,15 @@
 <script lang="ts">
   import PokeQuery, { type PokeData } from '$lib/components/PokeQuery.svelte';
+  import Select from '$lib/components/Select.svelte';
   import { type_colors } from '$lib/const';
+  import Scatter from '$lib/viz/Scatter.svelte';
+  import { X } from '@lucide/svelte';
+  import { ScatterChart, Tooltip } from 'layerchart';
 
   import { type Pokemon } from 'pokeapi-js-wrapper';
+  import { setContext } from 'svelte';
 
-  let data: PokeData = $state({
+  let poke_data: PokeData = $state({
     pokedex: {},
     pokemon: {},
     pokemon_species: {},
@@ -13,49 +18,30 @@
     types: {},
   });
 
-  const getFallbackSprite = (pokemon: Pokemon) => {
-    const sprite = pokemon.sprites.front_default;
-    if (sprite) return sprite;
-
-    const species = data.pokemon_species[pokemon.species.name];
-
-    if (!species) {
-      return null;
-    }
-
-    for (const v of species.varieties) {
-      const fallback = data.pokemon[v.pokemon.name].sprites.front_default;
-      if (fallback) {
-        return fallback;
-      }
-    }
-
-    return null;
-  };
-
   let queried_pokemon: { [key: string]: Pokemon } = $state({});
 </script>
+
+<!-- <Select
+  class="flex-row gap-2"
+  bind:value={selected_pokemon}
+  options={Object.keys(data.pokemon).map((n) => ({
+    name: n[0].toUpperCase() + n.slice(1),
+    value: n,
+  }))}
+/> -->
 
 <div
   class="bg-base-50 border-base-300 mx-auto flex w-fit max-w-full flex-col gap-6 rounded-xl border p-4"
 >
-  <PokeQuery bind:pokemon={queried_pokemon} bind:data />
-  <div class="text-base-400 flex flex-wrap gap-2">
-    {#each Object.entries(queried_pokemon) as [key, pokemon]}
-      <div class="flex gap-2 rounded-xl border-1 p-1">
-        <img
-          class="bg-base-100 h-16 w-16 rounded-xl border"
-          src={getFallbackSprite(pokemon)}
-          alt={pokemon.name}
-        />
-        <div class="flex flex-col">
-          <p class="text-base-700 text-lg font-light tracking-widest uppercase">{key}</p>
-          <p class="text-base-600 text-sm font-light tracking-widest">{pokemon.name}</p>
-        </div>
-      </div>
-    {/each}
-  </div>
+  <PokeQuery bind:pokemon={queried_pokemon} bind:data={poke_data} />
 
+  <div>
+    <div class="aspect-[7/5] w-full rounded-lg border p-4">
+      <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
+      <Scatter {poke_data} {queried_pokemon} />
+    </div>
+  </div>
+  <div class="text-base-400 flex flex-wrap gap-2"></div>
   {#if Object.keys(queried_pokemon).length === 0}
     <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
   {/if}

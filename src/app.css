@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
-
+@source '../node_modules/layerchart/**/*.{svelte,js}';
 :root {
   --base-hue: 257;
   --accent-hue: mod(var(--base-hue) + 180, 360);
@@ -167,6 +167,12 @@
   --color-accent-800: oklch(var(--ad-l-800) var(--ad-c-800) var(--accent-hue));
   --color-accent-900: oklch(var(--ad-l-900) var(--ad-c-900) var(--accent-hue));
   --color-accent-950: oklch(var(--ad-l-950) var(--ad-c-950) var(--accent-hue));
+
+  --color-surface-100: var(--color-base-100);
+  --color-surface-200: var(--color-base-200);
+  --color-surface-300: var(--color-base-300);
+  --color-surface-content: var(--color-base-800);
+  --color-primary: var(--color-accent-500);
 }
 
 @theme inline {

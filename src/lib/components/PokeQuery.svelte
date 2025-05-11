@@ -137,7 +137,7 @@
   };
 
   $effect(() => {
-    if (!filterOptions || !filterValues) return;
+    if (filterOptions.types.length === 0 || !filterValues) return;
     localStorage.setItem('filter', JSON.stringify(filterValues));
 
     const timeout = setTimeout(() => {

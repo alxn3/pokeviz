@@ -18,6 +18,7 @@
   "dependencies": {
     "@lucide/svelte": "^0.483.0",
     "d3": "^7.9.0",
+    "layerchart": "^1.0.10",
     "ml-pca": "^4.1.1",
     "pokeapi-js-wrapper": "^1.2.8"
   },
