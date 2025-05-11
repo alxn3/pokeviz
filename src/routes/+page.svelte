@@ -1,17 +1,8 @@
 <script lang="ts">
-  import Filter, { type FilterOptions, type FilterValues } from '$lib/components/Filter.svelte';
-  import PokeQuery from '$lib/components/PokeQuery.svelte';
-  import PokeFilter, { type PokeData } from '$lib/components/PokeQuery.svelte';
+  import PokeQuery, { type PokeData } from '$lib/components/PokeQuery.svelte';
   import { type_colors } from '$lib/const';
 
-  import {
-    type Generation,
-    type PokedexObject,
-    type Pokemon,
-    type PokemonSpecies,
-    type Region,
-    type Type,
-  } from 'pokeapi-js-wrapper';
+  import { type Pokemon } from 'pokeapi-js-wrapper';
 
   let data: PokeData = $state({
     pokedex: {},
