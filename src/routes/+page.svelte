@@ -1,10 +1,9 @@
 <script lang="ts">
   import PokeQuery, { type PokeData } from '$lib/components/PokeQuery.svelte';
-  import Select from '$lib/components/Select.svelte';
   import { type_colors } from '$lib/const';
+  import { getFallbackSprite } from '$lib/utils';
   import Scatter from '$lib/viz/Scatter.svelte';
-  import { X } from '@lucide/svelte';
-  import { ScatterChart, Tooltip } from 'layerchart';
+  import ScatterPlot from '$lib/components/ScatterPlot.svelte';
 
   import { type Pokemon } from 'pokeapi-js-wrapper';
   import { setContext } from 'svelte';
@@ -19,6 +18,9 @@
   });
 
   let queried_pokemon: { [key: string]: Pokemon } = $state({});
+  
+  /** code for graph */
+
 </script>
 
 <!-- <Select
@@ -34,6 +36,23 @@
   class="bg-base-50 border-base-300 mx-auto flex w-fit max-w-full flex-col gap-6 rounded-xl border p-4"
 >
   <PokeQuery bind:pokemon={queried_pokemon} bind:data={poke_data} />
+  <h1>Pokemon Statistics Trends</h1>
+  <ScatterPlot {queried_pokemon}/>
+  <div class="text-base-400 flex flex-wrap gap-2">
+    {#each Object.entries(queried_pokemon) as [key, pokemon]}
+      <div class="flex gap-2 rounded-xl border-1 p-1">
+        <img
+          class="bg-base-100 h-16 w-16 rounded-xl border"
+          src={getFallbackSprite(pokemon, poke_data)}
+          alt={pokemon.name}
+        />
+        <div class="flex flex-col">
+          <p class="text-base-700 text-lg font-light tracking-widest uppercase">{key}</p>
+          <p class="text-base-600 text-sm font-light tracking-widest">{pokemon.name}</p>
+        </div>
+      </div>
+    {/each}
+  </div>
 
   <div>
     <div class="aspect-[7/5] w-full rounded-lg border p-4">
