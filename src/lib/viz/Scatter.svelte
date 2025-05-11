@@ -50,8 +50,11 @@
       },
       {} as { [key: string]: number },
     );
-    console.log(popularity_data);
   });
+
+  const getPopularity = (p: Pokemon) => {
+    return popularity_data[p.name] ?? popularity_data[p.species.name] ?? 0;
+  };
 </script>
 
 <div class="flex h-full flex-col gap-2">
@@ -76,7 +79,7 @@
       yPadding={[10, 10]}
       rRange={use_popularity ? [5, 30] : [5, 5]}
       brush
-      r={(p: Pokemon) => (use_popularity ? (popularity_data[p.name] ?? 1) : 0)}
+      r={(p: Pokemon) => (use_popularity ? getPopularity(p) : 0)}
       x={(p: Pokemon) => p?.stats.find((s) => s.stat.name === x_axis)?.base_stat}
       y={(p: Pokemon) => p?.stats.find((s) => s.stat.name === y_axis)?.base_stat}
     >
@@ -91,7 +94,13 @@
         >
           {y(data)}
         </Tooltip.Root>
-        <PokeTooltip {poke_data} />
+        <PokeTooltip {poke_data} let:data>
+          {#if getPopularity(data)}
+            <p class="text-base-700 text-sm font-light tracking-widest uppercase">
+              Popularity: {getPopularity(data)}
+            </p>
+          {/if}
+        </PokeTooltip>
 
         <Tooltip.Root
           x="data"
