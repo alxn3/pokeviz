@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@lucide/svelte": "^0.483.0",
+    "@types/d3": "^7.4.3",
     "d3": "^7.9.0",
     "layerchart": "^1.0.10",
     "ml-pca": "^4.1.1",
