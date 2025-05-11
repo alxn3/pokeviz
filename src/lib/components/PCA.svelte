@@ -80,108 +80,6 @@
     });
   }
 
-  function drawScatterplot(containerId, dataset, xKey, yKey, xLabel, yLabel, title) {
-    const svg = d3.select(containerId)
-        .html("")
-        .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    // Tooltip div (reused across charts)
-    const tooltip = d3.select("#tooltip");
-
-    dataset.forEach(d => {
-        d[xKey] = +d[xKey];
-        d[yKey] = +d[yKey];
-    });
-
-    const x = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d[xKey])])
-        .range([0, width]);
-
-    svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x));
-
-    const y = d3.scaleLinear()
-        .domain([0, d3.max(dataset, d => d[yKey])])
-        .range([height, 0]);
-
-    svg.append("g")
-        .call(d3.axisLeft(y));
-
-    svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("x", width / 2)
-        .attr("y", height + 40)
-        .text(xLabel);
-
-    svg.append("text")
-        .attr("text-anchor", "end")
-        .attr("transform", "rotate(-90)")
-        .attr("y", -50)
-        .attr("x", -height / 2)
-        .text(yLabel);
-
-    svg.append("text")
-        .attr("x", width / 2)
-        .attr("y", -20)
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .style("font-weight", "bold")
-        .text(title);
-
-    svg.append('g')
-        .selectAll("circle")
-        .data(dataset)
-        .enter()
-        .append("circle")
-        .attr("cx", d => x(d[xKey]))
-        .attr("cy", d => y(d[yKey]))
-        .attr("r", 3)
-        .style("fill", "#69b3a2")
-        .on("mouseover", (event, d) => {
-            const variantPrefix = d.Variant && d.Variant.trim() !== "" ? `${d.Variant} ` : "";
-            tooltip
-                .style("opacity", 1)
-                .html(`<strong>${variantPrefix}${d.Name}</strong>`)
-                .style("left", event.pageX + 10 + "px")
-                .style("top", event.pageY - 28 + "px");
-            })
-        .on("mousemove", event => {
-            tooltip
-            .style("left", event.pageX + 10 + "px")
-            .style("top", event.pageY - 28 + "px");
-        })
-        .on("mouseout", () => {
-            tooltip.style("opacity", 0);
-        });
-  }
-
-  
-  function updateChart1() {
-    const popularityMap = new Map(popularityData.map(d => [d.Name, +d.Popularity]));
-    const merged = statData
-      .filter(d => popularityMap.has(d.Name))
-      .map(d => ({
-        ...d,
-        [selectedX1]: +d[selectedX1],
-        Popularity: popularityMap.get(d.Name)
-      }));
-    
-    console.log("bruh")
-    console.log(popularityMap)
-    console.log(statData)
-    console.log(merged)
-    drawScatterplot("#chart1", merged, selectedX1, "Popularity", selectedX1, "Popularity", `${selectedX1} vs Popularity`);
-  }
-
-  function updateChart2() {
-    drawScatterplot("#chart2", statData, selectedX, selectedY, selectedX, selectedY, `${selectedX} vs ${selectedY}`);
-  }
-
   function drawPlotly3D() {
     const statKeys = ["Total", "HP", "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed"];
 
@@ -195,7 +93,6 @@
     const scores = scoresMatrix.to2DArray();
     const explained = pca.getExplainedVariance(); // returns [%, %, %, ...]
     const cumulative = explained.slice(0, 3).reduce((a, b) => a + b, 0);
-    console.log(`First 3 PCs explain about ${Math.round(cumulative * 100)}% of variance`);
 
     const points = validRows.map((d, i) => ({
       Name: d.Name,
@@ -236,9 +133,6 @@
     Plotly.newPlot('chart3d', [trace], layout);
   }
 
-  
-
-  /* need to use document to */
   function loadPlotly3D(data) {
     const script = document.createElement("script");
     script.src="https://cdn.plot.ly/plotly-2.27.0.min.js";
@@ -250,89 +144,26 @@
 
   function updateChartFromQueried() {
     statData = getQueriedPokemonStats();
-    //drawScatterplot("#chart2", data, selectedX, selectedY, selectedX, selectedY, `${selectedX} vs ${selectedY} (Filtered)`);
-    updateChart1();
-    updateChart2();
     drawPlotly3D();
   }
 
   $: if (Object.keys(queried_pokemon).length > 0) {
     updateChartFromQueried();
-    console.log("idiot", )
-
   }
 
   onMount(() => {
-    Promise.all([
-      d3.csv('/pokedex_full.csv'),
-      d3.csv('/popularity.csv')
-    ]).then(([pokedex, popularity]) => {
-      statData = pokedex;
-      popularityData = popularity;
-      updateChart1();
-      updateChart2();
-      loadPlotly3D(pokedex);
-    });
+    statData = getQueriedPokemonStats();
+    loadPlotly3D(statData);
   });
 </script>
 
-<!-- Chart 1: Stat vs Popularity -->
-<p>Filtered to {Object.keys(queried_pokemon).length} Pokémon</p>
-<div id="chart1"></div>
-<h3 style="margin-left:1rem;">Chart 1: Select X-axis:</h3>
-<div class="button-group">
-  {#each statOptions as option}
-    <button
-      class:selected={selectedX1 === option}
-      on:click={() => {
-        selectedX1 = option;
-        updateChart1();
-      }}>
-      {option}
-    </button>
-  {/each}
-</div>
 
-<!-- Chart 2: Stat vs Stat -->
-<div id="chart2"></div>
-
-<h3 style="margin-left:1rem;">Chart 2: Select X-axis:</h3>
-<div class="button-group">
-  {#each statOptions as option}
-    <button
-      class:selected={selectedX === option}
-      on:click={() => {
-        selectedX = option;
-        updateChart2();
-      }}>
-      {option}
-    </button>
-  {/each}
-</div>
-
-<h3 style="margin-left:1rem; margin-top: 1.5rem;">Chart 2: Select Y-axis:</h3>
-<div class="button-group">
-  {#each statOptions as option}
-    <button
-      class:selected={selectedY === option}
-      on:click={() => {
-        selectedY = option;
-        updateChart2();
-      }}>
-      {option}
-    </button>
-  {/each}
-</div>
-<div id="tooltip" class="tooltip" style="opacity: 0;"></div>
-
-
-<!-- Chart 3: Stat vs Stat -->
+<!-- Chart 3: PCA -->
 <h3 style="margin-left: 1rem;">PCA Plot</h3>
 <h3 style="margin-left: 1rem;">7 pokemon statistics reduced to 3 dimensions representing 94% of variance</h3>
 <div id="chart3d" style="height: 500px;"></div>
-
 <style>
-  #chart1, #chart2, #chart3d {
+  #chart3d {
     margin: 2rem 1rem;
   }
 

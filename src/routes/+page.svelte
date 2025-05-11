@@ -2,7 +2,8 @@
   import PokeQuery, { type PokeData } from '$lib/components/PokeQuery.svelte';
   import { type_colors } from '$lib/const';
   import Scatter from '$lib/viz/Scatter.svelte';
-  import ScatterPlot from '$lib/components/ScatterPlot.svelte';
+  import PCA from '$lib/components/PCA.svelte';
+  import NetworkGraph from '$lib/components/NetworkGraph.svelte';
 
   import { type Pokemon } from 'pokeapi-js-wrapper';
 
@@ -27,8 +28,8 @@
       <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
       <Scatter {poke_data} {queried_pokemon} />
     </div>
-    <!-- <h1>Pokemon Statistics Trends</h1>
-    <ScatterPlot {queried_pokemon} /> -->
+    <PCA {queried_pokemon} />
+    <NetworkGraph {queried_pokemon}/>
     {#if Object.keys(queried_pokemon).length === 0}
       <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
     {/if}
