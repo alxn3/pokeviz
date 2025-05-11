@@ -2,14 +2,18 @@
   https://plotly.com/javascript/3d-scatter-plots/
   https://d3-graph-gallery.com/graph/scatter_basic.html 
 -->
+
 <script>
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
   import { PCA } from 'ml-pca';
+  import { draw } from 'svelte/transition';
+
+  export let queried_pokemon = {};
 
   const statOptions = ["Total", "HP", "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed"];
-  let selectedX1 = "Speed";   // Chart 1: stat vs Popularity
-  let selectedX = "Attack";   // Chart 2: stat vs stat
+  let selectedX1 = "Speed";   
+  let selectedX = "Attack";  
   let selectedY = "Speed";
 
   const margin = { top: 40, right: 30, bottom: 50, left: 60 },
@@ -19,15 +23,63 @@
   let popularityData = [];
   let statData = [];
 
-  /**
-   * @param {string} containerId
-   * @param {any[]} dataset
-   * @param {string} xKey
-   * @param {string} yKey
-   * @param {string} xLabel
-   * @param {string} yLabel
-   * @param {string} title
-   */
+  function capitalizeFirst(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  function getQueriedPokemonStats() {
+    return Object.values(queried_pokemon).map(pokemon => {
+      const statsMap = {
+        Name: capitalizeFirst(pokemon.name),
+        "HP": 0,
+        "Attack": 0,
+        "Defense": 0,
+        "Sp.Atk": 0,
+        "Sp.Def": 0,
+        "Speed": 0,
+        "Total": 0
+      };
+
+      for (const statEntry of pokemon.stats) {
+        const rawName = statEntry.stat.name;
+        const value = statEntry.base_stat;
+
+        switch (rawName) {
+          case 'hp':
+            statsMap["HP"] = value;
+            break;
+          case 'attack':
+            statsMap["Attack"] = value;
+            break;
+          case 'defense':
+            statsMap["Defense"] = value;
+            break;
+          case 'special-attack':
+            statsMap["Sp.Atk"] = value;
+            break;
+          case 'special-defense':
+            statsMap["Sp.Def"] = value;
+            break;
+          case 'speed':
+            statsMap["Speed"] = value;
+            break;
+        }
+      }
+
+      // Compute total of all six base stats
+      statsMap["Total"] =
+        statsMap["HP"] +
+        statsMap["Attack"] +
+        statsMap["Defense"] +
+        statsMap["Sp.Atk"] +
+        statsMap["Sp.Def"] +
+        statsMap["Speed"];
+
+      return statsMap;
+    });
+  }
+
   function drawScatterplot(containerId, dataset, xKey, yKey, xLabel, yLabel, title) {
     const svg = d3.select(containerId)
         .html("")
@@ -118,6 +170,11 @@
         [selectedX1]: +d[selectedX1],
         Popularity: popularityMap.get(d.Name)
       }));
+    
+    console.log("bruh")
+    console.log(popularityMap)
+    console.log(statData)
+    console.log(merged)
     drawScatterplot("#chart1", merged, selectedX1, "Popularity", selectedX1, "Popularity", `${selectedX1} vs Popularity`);
   }
 
@@ -125,10 +182,10 @@
     drawScatterplot("#chart2", statData, selectedX, selectedY, selectedX, selectedY, `${selectedX} vs ${selectedY}`);
   }
 
-  function drawPlotly3D(data) {
+  function drawPlotly3D() {
     const statKeys = ["Total", "HP", "Attack", "Defense", "Sp.Atk", "Sp.Def", "Speed"];
 
-    const validRows = data.filter(d =>
+    const validRows = statData.filter(d =>
       statKeys.every(k => d[k] !== undefined && d[k] !== "" && !isNaN(+d[k]))
     );
 
@@ -179,6 +236,32 @@
     Plotly.newPlot('chart3d', [trace], layout);
   }
 
+  
+
+  /* need to use document to */
+  function loadPlotly3D(data) {
+    const script = document.createElement("script");
+    script.src="https://cdn.plot.ly/plotly-2.27.0.min.js";
+    script.onload = () => drawPlotly3D(data);
+    document.body.appendChild(script);
+  }
+
+  
+
+  function updateChartFromQueried() {
+    statData = getQueriedPokemonStats();
+    //drawScatterplot("#chart2", data, selectedX, selectedY, selectedX, selectedY, `${selectedX} vs ${selectedY} (Filtered)`);
+    updateChart1();
+    updateChart2();
+    drawPlotly3D();
+  }
+
+  $: if (Object.keys(queried_pokemon).length > 0) {
+    updateChartFromQueried();
+    console.log("idiot", )
+
+  }
+
   onMount(() => {
     Promise.all([
       d3.csv('/pokedex_full.csv'),
@@ -191,20 +274,11 @@
       loadPlotly3D(pokedex);
     });
   });
-
-  /* need to use document to */
-  function loadPlotly3D(data) {
-    const script = document.createElement("script");
-    script.src="https://cdn.plot.ly/plotly-2.27.0.min.js";
-    script.onload = () => drawPlotly3D(data);
-    document.body.appendChild(script);
-  }
-
 </script>
 
 <!-- Chart 1: Stat vs Popularity -->
+<p>Filtered to {Object.keys(queried_pokemon).length} Pokémon</p>
 <div id="chart1"></div>
-
 <h3 style="margin-left:1rem;">Chart 1: Select X-axis:</h3>
 <div class="button-group">
   {#each statOptions as option}

@@ -3,6 +3,7 @@
   import PokeQuery from '$lib/components/PokeQuery.svelte';
   import PokeFilter, { type PokeData } from '$lib/components/PokeQuery.svelte';
   import { type_colors } from '$lib/const';
+  import ScatterPlot from '$lib/components/ScatterPlot.svelte';
 
   import {
     type Generation,
@@ -43,12 +44,17 @@
   };
 
   let queried_pokemon: { [key: string]: Pokemon } = $state({});
+  
+  /** code for graph */
+
 </script>
 
 <div
   class="bg-base-50 border-base-300 mx-auto flex w-fit max-w-full flex-col gap-6 rounded-xl border p-4"
 >
   <PokeQuery bind:pokemon={queried_pokemon} bind:data />
+  <h1>Pokemon Statistics Trends</h1>
+  <ScatterPlot {queried_pokemon}/>
   <div class="text-base-400 flex flex-wrap gap-2">
     {#each Object.entries(queried_pokemon) as [key, pokemon]}
       <div class="flex gap-2 rounded-xl border-1 p-1">
