@@ -16,23 +16,24 @@
   });
 
   let queried_pokemon: { [key: string]: Pokemon } = $state({});
-
 </script>
 
 <div
   class="bg-base-50 border-base-300 mx-auto flex w-fit max-w-full flex-col gap-6 rounded-xl border p-4"
 >
-  <div class="aspect-[7/5] w-full rounded-lg border p-4">
-    <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
-    <Scatter {poke_data} {queried_pokemon} />
-  </div>
   <PokeQuery bind:pokemon={queried_pokemon} bind:data={poke_data} />
-  <h1>Pokemon Statistics Trends</h1>
-  <ScatterPlot {queried_pokemon} />
-  <div class="text-base-400 flex flex-wrap gap-2"></div>
-  {#if Object.keys(queried_pokemon).length === 0}
-    <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
-  {/if}
+  <div>
+    <div class="aspect-[7/5] w-full rounded-lg border p-4">
+      <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
+      <Scatter {poke_data} {queried_pokemon} />
+    </div>
+    <h1>Pokemon Statistics Trends</h1>
+    <ScatterPlot {queried_pokemon} />
+    <div class="text-base-400 flex flex-wrap gap-2"></div>
+    {#if Object.keys(queried_pokemon).length === 0}
+      <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
+    {/if}
+  </div>
 </div>
 
 <div
