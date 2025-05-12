@@ -18,3 +18,24 @@ export const type_colors: { [key: string]: string } = {
   dark: 'type-dark',
   fairy: 'type-fairy',
 };
+
+export const type_colors_hue: { [key: string]: string } = {
+  normal: '--type-hue-normal',
+  fighting: '--type-hue-fighting',
+  flying: '--type-hue-flying',
+  poison: '--type-hue-poison',
+  ground: '--type-hue-ground',
+  rock: '--type-hue-rock',
+  bug: '--type-hue-bug',
+  ghost: '--type-hue-ghost',
+  steel: '--type-hue-steel',
+  fire: '--type-hue-fire',
+  water: '--type-hue-water',
+  grass: '--type-hue-grass',
+  electric: '--type-hue-electric',
+  psychic: '--type-hue-psychic',
+  ice: '--type-hue-ice',
+  dragon: '--type-hue-dragon',
+  dark: '--type-hue-dark',
+  fairy: '--type-hue-fairy',
+};

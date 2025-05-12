@@ -3,7 +3,7 @@
   import { Tooltip } from 'layerchart';
   import type { PokeData } from './PokeQuery.svelte';
   import type { Pokemon } from 'pokeapi-js-wrapper';
-  import type { Snippet } from 'svelte';
+  import { type_colors } from '$lib/const';
 
   let {
     poke_data,
@@ -29,11 +29,22 @@
       alt={data.name}
     />
     <div class="flex flex-col">
-      <p class="text-base-700 text-lg font-light tracking-widest uppercase">
-        {data.name}
-      </p>
+      <div class="flex items-center justify-between gap-2">
+        <p class="text-base-700 text-lg font-light tracking-widest uppercase">
+          {data.name}
+        </p>
+        <div class="flex gap-1">
+          {#each (data as Pokemon).types as { type }}
+            <p
+              class={`text-type-500 ${type_colors[type.name]} h-fit w-fit rounded-xl border px-2 py-0.5 text-xs font-medium tracking-widest`}
+            >
+              {type.name.slice(0, 3).toUpperCase()}
+            </p>
+          {/each}
+        </div>
+      </div>
       <slot {data} />
-      <div class="flex w-72 flex-wrap items-start gap-0 space-y-1 space-x-1">
+      <div class="flex w-72 flex-wrap items-start gap-0 space-y-1 space-x-1 pt-1">
         {#each (data as Pokemon).stats as { base_stat, stat }}
           <p
             class="text-base-600 w-fit rounded-xl border px-2 py-0.5 text-sm font-light tracking-widest"

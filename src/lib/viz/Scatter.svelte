@@ -9,6 +9,7 @@
   import POPULARITY_DATA from '$lib/data/popularity.csv?url';
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { type_colors_hue } from '$lib/const';
 
   let {
     poke_data,
@@ -67,11 +68,15 @@
             x_axis && y_axis && !use_popularity;
             return Object.values(queried_pokemon);
           })(),
-          color: 'var(--color-base-700)',
         },
       ]}
       props={{
-        points: { tweened: { duration: 200 } },
+        points: {
+          tweened: { duration: 200 },
+          fillOpacity: 0.4,
+          stroke: 'var(--color-base-400)',
+          strokeWidth: 0.5,
+        },
         xAxis: { tweened: { duration: 200 } },
         yAxis: { tweened: { duration: 200 } },
       }}
@@ -79,9 +84,22 @@
       yPadding={[10, 10]}
       rRange={use_popularity ? [5, 30] : [5, 5]}
       brush
+      cDomain={Object.keys(type_colors_hue)}
+      cRange={Object.keys(type_colors_hue).map(
+        (h) => `oklch(var(--ad-l-400) var(--ad-c-300) var(${type_colors_hue[h]}))`,
+      )}
+      c={(p: Pokemon) => p.types[0].type.name}
       r={(p: Pokemon) => (use_popularity ? getPopularity(p) : 0)}
-      x={(p: Pokemon) => p?.stats.find((s) => s.stat.name === x_axis)?.base_stat}
-      y={(p: Pokemon) => p?.stats.find((s) => s.stat.name === y_axis)?.base_stat}
+      x={(p: Pokemon) => {
+        const v = p?.stats.find((s) => s.stat.name === x_axis)?.base_stat;
+        // Add some
+        return v ? v + Math.random() / 4 - 0.125 : 0;
+      }}
+      y={(p: Pokemon) => {
+        const v = p?.stats.find((s) => s.stat.name === y_axis)?.base_stat;
+        return v ? v + Math.random() / 4 - 0.125 : 0;
+      }}
+      let:config
     >
       <svelte:fragment slot="tooltip" let:x let:y let:padding let:height>
         <Tooltip.Root
@@ -92,7 +110,7 @@
           class="text-base-900 border-base-400 mr-[2px] rounded border px-1 py-[2px] text-[10px] font-semibold whitespace-nowrap"
           let:data
         >
-          {y(data)}
+          {Math.round(y(data))}
         </Tooltip.Root>
         <PokeTooltip {poke_data} let:data>
           {#if getPopularity(data)}
@@ -110,7 +128,7 @@
           contained={false}
           let:data
         >
-          {x(data)}
+          {Math.round(x(data))}
         </Tooltip.Root>
       </svelte:fragment>
     </ScatterChart>

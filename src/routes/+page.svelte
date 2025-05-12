@@ -32,7 +32,7 @@
     {#if Object.keys(queried_pokemon).length === 0}
       <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
     {/if}
-  </div>
+  </div> 
 </div>
 
 <div
