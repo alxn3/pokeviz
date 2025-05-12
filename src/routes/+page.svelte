@@ -70,7 +70,7 @@
     </p>
   {/if}
   <div>
-    <div class="border-base-500 aspect-[7/5] min-h-[40em] w-full rounded-lg border p-4">
+    <div class="border-base-500 aspect-[7/5] min-h-[40em] w-full rounded-lg border p-4 pb-6">
       {#if tab_index === 0}
         <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
         <Scatter {poke_data} {queried_pokemon} />
