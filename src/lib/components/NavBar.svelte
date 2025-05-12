@@ -6,7 +6,7 @@
   <a href="/" class="font-display text-xl font-medium">PokéViz</a>
   <div class="flex gap-4">
     <div class="flex gap-2">
-      <a href="/">Test</a>
+      <!-- <a href="/">Test</a> -->
     </div>
     <ThemeToggle />
   </div>
