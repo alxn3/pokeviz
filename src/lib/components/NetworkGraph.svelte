@@ -2,6 +2,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import * as d3 from 'd3';
+  import { type_colors } from '$lib/const';
 
   let { queried_pokemon } = $props();
 
@@ -30,10 +31,12 @@
     });
   }
 
+  let linksMap = {};
+
   function buildTypeGraph(pokemonList) {
+    linksMap = {};
     const typeCounts = {};
     const typeSet = new Set();
-    const linksMap = {};
 
     for (const pokemon of pokemonList) {
       const primary = pokemon.PrimaryType;
@@ -71,6 +74,8 @@
     return { nodes, links };
   }
 
+  let hovered_id: string | null = $state(null);
+
   function renderGraph(graph) {
     // Clear previous layers
     svg.selectAll('.layer').remove();
@@ -81,7 +86,7 @@
       .selectAll('line')
       .data(graph.links)
       .join('line')
-      .attr('class', 'stroke-base-600')
+      .attr('class', 'stroke-base-600/40')
       .attr('stroke-width', (d) => Math.sqrt(d.weight));
 
     const linkLabel = svg
@@ -90,23 +95,48 @@
       .selectAll('text')
       .data(graph.links)
       .join('text')
-      .attr('class', 'text-base-600 fill-current')
+      .attr('class', 'text-base-800 font-semibold fill-current')
       .attr('text-anchor', 'middle')
       .attr('font-size', '0.75rem') // Tailwind text-xs
       .text((d) => d.weight);
 
     const node = svg
       .append('g')
-      .attr('class', 'layer')
       .selectAll('circle')
       .data(graph.nodes)
       .join('circle')
       .attr('r', 12)
-      .style('fill', (d) => `oklch(var(--ad-l-400) var(--ad-c-300) var(--type-hue-${d.id}))`)
+      .attr('class', (d) => `layer stroke-type-500/40 stroke-2 fill-type-400 ${type_colors[d.id]}`)
       .classed('node', true)
       .classed('fixed', (d) => d.fx !== undefined)
       .call(d3.drag().on('start', dragstart).on('drag', dragged))
-      .on('click', click);
+      .on('click', click)
+      .on('mouseover', (event, d) => {
+        hovered_id = d.id;
+        node.attr('opacity', (n) => {
+          const key = [n.id, d.id].sort().join('::');
+          return n.id === d.id || linksMap[key] ? 1 : 0.3;
+        });
+        linkLabel.attr('opacity', (l) => (l.source.id === d.id || l.target.id === d.id ? 1 : 0));
+        link.attr('opacity', (l) => (l.source.id === d.id || l.target.id === d.id ? 1 : 0.3));
+        link.attr('stroke-width', (l) =>
+          l.source.id === d.id || l.target.id === d.id ? l.weight : 1,
+        );
+        label.text((n) => {
+          const key = [n.id, d.id].sort().join('::');
+
+          const amt = d.id === n.id ? d.count : (linksMap[key] ?? 0);
+          return `${n.id[0].toUpperCase() + n.id.slice(1)} (${amt})`;
+        });
+      })
+      .on('mouseout', (event, d) => {
+        hovered_id = null;
+        node.attr('opacity', 1);
+        linkLabel.attr('opacity', 1);
+        link.attr('opacity', 1);
+        link.attr('stroke-width', (l) => Math.sqrt(l.weight));
+        label.text((n) => `${n.id[0].toUpperCase() + n.id.slice(1)} (${n.count})`);
+      });
 
     const label = svg
       .append('g')
@@ -118,7 +148,7 @@
       .attr('text-anchor', 'middle')
       .attr('font-size', '0.75rem')
       .attr('dy', 20)
-      .text((d) => `${d.id} (${d.count})`);
+      .text((d) => `${d.id[0].toUpperCase() + d.id.slice(1)} (${d.count})`);
 
     simulation = d3
       .forceSimulation(graph.nodes)
@@ -127,7 +157,7 @@
         d3
           .forceLink(graph.links)
           .id((_, i) => i)
-          .distance(100),
+          .distance(200),
       )
       .force('charge', d3.forceManyBody().strength(-300))
       .force('center', d3.forceCenter(width / 2, height / 2))
