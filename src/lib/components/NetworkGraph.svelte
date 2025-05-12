@@ -80,47 +80,45 @@
       .attr('class', 'layer')
       .selectAll('line')
       .data(graph.links)
-      .join("line")
-      .attr("class", "stroke-base-600")
-      .attr("stroke-width", d => Math.sqrt(d.weight));
+      .join('line')
+      .attr('class', 'stroke-base-600')
+      .attr('stroke-width', (d) => Math.sqrt(d.weight));
 
     const linkLabel = svg
       .append('g')
       .attr('class', 'layer')
       .selectAll('text')
       .data(graph.links)
-      .join("text")
-      .attr("class", "text-base-600 fill-current")
-      .attr("text-anchor", "middle")
-      .attr("font-size", "0.75rem") // Tailwind text-xs
-      .text(d => d.weight);
+      .join('text')
+      .attr('class', 'text-base-600 fill-current')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '0.75rem') // Tailwind text-xs
+      .text((d) => d.weight);
 
     const node = svg
       .append('g')
       .attr('class', 'layer')
       .selectAll('circle')
       .data(graph.nodes)
-      .join("circle")
-      .attr("r", 12)
-      .style("fill", d => `oklch(var(--ad-l-500) var(--type-c-max-${d.id}) var(--type-hue-${d.id}))`)
-      .classed("node", true)
-      .classed("fixed", d => d.fx !== undefined)
-      .call(d3.drag()
-        .on("start", dragstart)
-        .on("drag", dragged))
-      .on("click", click);
+      .join('circle')
+      .attr('r', 12)
+      .style('fill', (d) => `oklch(var(--ad-l-400) var(--ad-c-300) var(--type-hue-${d.id}))`)
+      .classed('node', true)
+      .classed('fixed', (d) => d.fx !== undefined)
+      .call(d3.drag().on('start', dragstart).on('drag', dragged))
+      .on('click', click);
 
-
-    const label = svg.append("g")
-      .attr("class", "layer")
-      .selectAll("text")
+    const label = svg
+      .append('g')
+      .attr('class', 'layer')
+      .selectAll('text')
       .data(graph.nodes)
-      .join("text")
-      .attr("class", "text-base-900 font-semibold fill-current")
-      .attr("text-anchor", "middle")
-      .attr("font-size", "0.75rem")
-      .attr("dy", 20)
-      .text(d => `${d.id} (${d.count})`);
+      .join('text')
+      .attr('class', 'text-base-900 font-semibold fill-current')
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '0.75rem')
+      .attr('dy', 20)
+      .text((d) => `${d.id} (${d.count})`);
 
     simulation = d3
       .forceSimulation(graph.nodes)
@@ -168,7 +166,6 @@
       simulation.alpha(1).restart();
     }
   }
-
 
   onMount(() => {
     svg = d3
