@@ -79,7 +79,7 @@
       .selectAll("line")
       .data(graph.links)
       .join("line")
-      .attr("stroke", "#aaa")
+      .attr("class", "stroke-base-600")
       .attr("stroke-width", d => Math.sqrt(d.weight));
 
     const linkLabel = svg.append("g")
@@ -87,9 +87,9 @@
       .selectAll("text")
       .data(graph.links)
       .join("text")
+      .attr("class", "text-base-600 fill-current")
       .attr("text-anchor", "middle")
-      .attr("font-size", 10)
-      .attr("fill", "#555")
+      .attr("font-size", "0.75rem") // Tailwind text-xs
       .text(d => d.weight);
 
     const node = svg.append("g")
@@ -98,7 +98,7 @@
       .data(graph.nodes)
       .join("circle")
       .attr("r", 12)
-      .attr("fill", "#69b3a2")
+      .style("fill", d => `oklch(var(--ad-l-500) var(--type-c-max-${d.id}) var(--type-hue-${d.id}))`)
       .classed("node", true)
       .classed("fixed", d => d.fx !== undefined)
       .call(d3.drag()
@@ -106,13 +106,15 @@
         .on("drag", dragged))
       .on("click", click);
 
+
     const label = svg.append("g")
       .attr("class", "layer")
       .selectAll("text")
       .data(graph.nodes)
       .join("text")
+      .attr("class", "text-base-900 font-semibold fill-current")
       .attr("text-anchor", "middle")
-      .attr("font-size", 10)
+      .attr("font-size", "0.75rem")
       .attr("dy", 20)
       .text(d => `${d.id} (${d.count})`);
 
@@ -159,6 +161,7 @@
       simulation.alpha(1).restart();
     }
   }
+
 
   onMount(() => {
     svg = d3.select("#networkGraph")
