@@ -197,14 +197,13 @@
     }
   }
 
+  let svggg;
+
   onMount(() => {
-    svg = d3
-      .select(container)
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+    width = container.clientWidth;
+    height = container.clientHeight - 16;
+    svggg = d3.select(container).append('svg').attr('width', width).attr('height', height);
+    svg = svggg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
   });
 
   $effect(() => {
@@ -227,10 +226,8 @@
 <svelte:window
   onresize={() => {
     width = container.clientWidth;
-    height = container.clientHeight;
-    svg
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom);
+    height = container.clientHeight - 16;
+    svggg.attr('width', width).attr('height', height);
     if (simulation) {
       simulation.force('center', d3.forceCenter(width / 2, height / 2));
       simulation.alpha(1).restart();
