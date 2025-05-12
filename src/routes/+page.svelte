@@ -6,6 +6,7 @@
   import NetworkGraph from '$lib/components/NetworkGraph.svelte';
 
   import { type Pokemon } from 'pokeapi-js-wrapper';
+  import { onMount } from 'svelte';
 
   let poke_data: PokeData = $state({
     pokedex: {},
@@ -26,7 +27,16 @@
     { name: 'Colors', value: 3 },
   ];
 
-  $inspect(tab_index);
+  $effect(() => {
+    if (Object.keys(queried_pokemon).length === 0) {
+      return;
+    }
+    localStorage.setItem('tab_index', tab_index.toString());
+  });
+
+  onMount(() => {
+    tab_index = parseInt(localStorage.getItem('tab_index') ?? '0');
+  });
 </script>
 
 <div
@@ -53,8 +63,14 @@
       </div>
     {/each}
   </div>
+
+  {#if Object.keys(queried_pokemon).length === 0}
+    <p class="text-accent-700 text-lg font-light tracking-widest uppercase">
+      ERROR: No Pokemon found
+    </p>
+  {/if}
   <div>
-    <div class="border-base-500 aspect-[7/5] w-full rounded-lg border p-4">
+    <div class="border-base-500 aspect-[7/5] min-h-[40em] w-full rounded-lg border p-4">
       {#if tab_index === 0}
         <p class="text-base-700 text-lg font-light tracking-widest uppercase">Scatter Chart</p>
         <Scatter {poke_data} {queried_pokemon} />
@@ -125,9 +141,5 @@
         </div>
       {/if}
     </div>
-
-    {#if Object.keys(queried_pokemon).length === 0}
-      <p class="text-accent-700 text-lg font-light tracking-widest uppercase">No Pokemon found</p>
-    {/if}
   </div>
 </div>
